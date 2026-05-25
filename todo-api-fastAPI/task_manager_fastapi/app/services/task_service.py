@@ -1,13 +1,21 @@
 from sqlalchemy.orm import Session
 from app.models.task_model import Task
 
-def create_task(db:Session, task_data):
-    task = Task(**task_data.dict())
+def create_task(
+    db: Session,
+    task_data,
+    owner_id
+):
+    task = Task(
+        **task_data.dict(),
+        owner_id=owner_id
+    )
+
     db.add(task)
     db.commit()
     db.refresh(task)
-    return task
 
+    return task
 def get_tasks(db:Session):
     return db.query(Task).all()
 

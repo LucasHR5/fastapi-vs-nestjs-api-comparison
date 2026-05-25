@@ -6,38 +6,27 @@ from app.core.security import (
     create_access_token,    
 )
 
-def login(
-        db: Session,
-        email: str,
-        password: str
-):
+def login(db, email, password):
     user = db.query(User).filter(
         User.email == email
     ).first()
+
     if not user:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid email or password"
-        )
-    password_valid = verify_password(
+        return None
+
+    if not verify_password(
         password,
         user.password
-    )
+    ):
+        return None
 
-    if not password_valid:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid email or password"
-        )
-    
-    token = create_access_token(
+    access_token = create_access_token(
         data={
-            "sub": user.email,
-            "email": user.email
+            "sub": str(user.id)
         }
     )
 
     return {
-        "access_token": token,
+        "access_token": access_token,
         "token_type": "bearer"
     }

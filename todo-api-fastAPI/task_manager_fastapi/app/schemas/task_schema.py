@@ -12,8 +12,6 @@ class TaskCreate(BaseModel):
     category: str | None = None
     labels: str | None = None
 
-    owner_id: int
-
 class TaskResponse(TaskCreate):
     id: int
     
